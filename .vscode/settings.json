@@ -1,0 +1,13 @@
+{
+  "css.lint.unknownAtRules": "ignore",
+  "cSpell.words": [
+    "Cerrar",
+    "clsx",
+    "fontsource",
+    "Inicio",
+    "intente",
+    "reduxjs",
+    "sesión",
+    "stylelint"
+  ]
+}

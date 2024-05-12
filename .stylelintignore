@@ -1,0 +1,4 @@
+build
+dist
+.rollup.cache
+coverage

@@ -1,0 +1,30 @@
+.errorContainer {
+	width: 100vw;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	overflow-y: auto;
+}
+
+.flandersImg {
+	width: 200px;
+	margin-bottom: 8px;
+}
+
+@media (width < 600px) {
+	.sorryTitle {
+		font-size: 3rem;
+	}
+
+	.sorryParagraph {
+		font-size: 1.2rem;
+	}
+}
+
+@media (width >= 1024px) {
+	.flandersImg {
+		width: 400px;
+	}
+}

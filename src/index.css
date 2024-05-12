@@ -1,0 +1,38 @@
+@import-normalize; /* bring in normalize.css styles */
+
+:root {
+	--pink-50: #fce4ec;
+	--pink-100: #f8bbd0;
+	--pink-200: #f48fb1;
+	--pink-300: #f06292;
+	--pink-400: #ec407a;
+	--pink-500: #e91e63;
+	--pink-600: #d81b60;
+	--pink-700: #c2185b;
+	--pink-800: #ad1457;
+	--pink-900: #880e4f;
+	--pink-a100: #ff80ab;
+	--pink-a200: #ff4081;
+	--pink-a400: #f50057;
+	--pink-a700: #c51162;
+	--indigo-50: #e8eaf6;
+	--indigo-100: #c5cae9;
+	--indigo-200: #9fa8da;
+	--indigo-300: #7986cb;
+	--indigo-400: #5c6bc0;
+	--indigo-500: #3f51b5;
+	--indigo-600: #3949ab;
+	--indigo-700: #303f9f;
+	--indigo-800: #283593;
+	--indigo-900: #1a237e;
+	--indigo-a100: #8c9eff;
+	--indigo-a200: #536dfe;
+	--indigo-a400: #3d5afe;
+	--indigo-a700: #304ffe;
+  --drawer-width: 260px;
+}
+
+body {
+	font-family: Roboto, sans-serif;
+	margin: 0;
+}
