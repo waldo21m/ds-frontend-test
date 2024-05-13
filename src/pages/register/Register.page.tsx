@@ -19,7 +19,7 @@ import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { UserTypes } from '../../utils/userTypes.enum';
 import { FetchStatutes } from '../../utils/fetchStatuses.enum';
-import { type RegisterFormInputs } from '../../types/registerTypes';
+import { type RegisterFormInputs } from '../../types/authTypes';
 import { registerThunk, useAuthSelector } from '../../slice/authSlice';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import DisruptiveStudioLogo from '../../assets/disruptive-studio-logo.svg';

@@ -9,11 +9,11 @@ import {
 import { toastConfig } from '../utils/toastConfig';
 import { FetchStatutes } from '../utils/fetchStatuses.enum';
 import axiosClient from '../utils/axiosClient';
-import { type RegisterFormInputs } from '../types/registerTypes';
 import {
+	type AuthResponse,
 	type AuthState,
 	type LoginFormInputs,
-	type AuthResponse,
+	type RegisterFormInputs,
 } from '../types/authTypes';
 import { type AppState } from '../App.store';
 

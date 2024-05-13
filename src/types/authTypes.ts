@@ -5,6 +5,13 @@ export interface LoginFormInputs {
 	password: string;
 }
 
+export interface RegisterFormInputs {
+	username: string;
+	email: string;
+	password: string;
+	userType: string;
+}
+
 export interface AuthState {
 	verifyIfIsAuthenticated: boolean;
 	isAuthenticated: boolean;
