@@ -1,31 +1,41 @@
+import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
+import { isAxiosError } from 'axios';
 import {
 	createAsyncThunk,
 	createSlice,
 	type PayloadAction,
 } from '@reduxjs/toolkit';
+import { toastConfig } from '../../../utils/toastConfig';
 import { FetchStatutes } from '../../../utils/fetchStatuses.enum';
 import axiosClient from '../../../utils/axiosClient';
-import {
-	type Post,
-	type MainState,
-	type FilterPosts,
-	type RemovePost,
-	type UpdatePost,
-} from '../../../types/mainTypes';
+import { type MainState, type ContentResponse } from '../../../types/mainTypes';
 import { type AppState } from '../../../App.store';
 
-const axiosApi = axiosClient('https://jsonplaceholder.typicode.com');
+const axiosApi = axiosClient(import.meta.env.VITE_DS_API_URL);
 
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-	const response = await axiosApi.get<Post[]>('/posts');
+export const findAllContents = createAsyncThunk<
+	ContentResponse,
+	{ page: number; limit: number },
+	{ rejectValue: string }
+>('contents/findAll', async (request, thunkAPI) => {
+	try {
+		const response = await axiosApi.get(
+			`/api/v1/contents?page=${request.page}&limit=${request.limit}`,
+		);
 
-	return response.data;
+		return response.data;
+	} catch (error) {
+		if (isAxiosError(error)) {
+			return thunkAPI.rejectWithValue(error.response?.data.message);
+		}
+
+		return thunkAPI.rejectWithValue('Ocurrió un error inesperado');
+	}
 });
 
 export const initialState: MainState = {
-	originalPosts: [],
-	posts: [],
+	contentResponse: {} as ContentResponse,
 	status: FetchStatutes.Idle,
 	error: null,
 };
@@ -33,44 +43,33 @@ export const initialState: MainState = {
 export const mainSlice = createSlice({
 	name: 'main',
 	initialState,
-	reducers: {
-		filterPosts: (state, action: PayloadAction<FilterPosts>) => {
-			state.posts = action.payload.filteredPosts;
-			state.userIdSelected = action.payload.userIdSelected;
-		},
-		updatePost: (state, action: PayloadAction<UpdatePost>) => {
-			state.originalPosts = action.payload.originalPosts;
-			state.posts = action.payload.posts;
-		},
-		removePost: (state, action: PayloadAction<RemovePost>) => {
-			state.originalPosts = action.payload.originalPosts;
-			state.posts = action.payload.posts;
-			state.userIdSelected = action.payload.userIdSelected;
-		},
-		showAllPosts: (state) => {
-			state.posts = state.originalPosts;
-			state.userIdSelected = undefined;
-		},
-	},
+	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(fetchPosts.pending, (state) => {
+			.addCase(findAllContents.pending, (state) => {
 				state.status = FetchStatutes.Loading;
 			})
-			.addCase(fetchPosts.fulfilled, (state, action: PayloadAction<Post[]>) => {
-				state.status = FetchStatutes.Succeeded;
-				state.posts = action.payload;
-				state.originalPosts = action.payload;
-			})
-			.addCase(fetchPosts.rejected, (state) => {
-				state.status = FetchStatutes.Failed;
-				state.error = 'Error al consultar posts, intente más tarde...';
-			});
+			.addCase(
+				findAllContents.fulfilled,
+				(state, action: PayloadAction<ContentResponse>) => {
+					state.status = FetchStatutes.Succeeded;
+					state.contentResponse = action.payload;
+				},
+			)
+			.addCase(
+				findAllContents.rejected,
+				(state, action: PayloadAction<string | undefined>) => {
+					const errorMessage =
+						action.payload ??
+						'Error al consultar los contenidos, intente más tarde...';
+					state.status = FetchStatutes.Failed;
+					state.error = errorMessage;
+
+					toast.error(errorMessage, toastConfig);
+				},
+			);
 	},
 });
-
-export const { filterPosts, updatePost, removePost, showAllPosts } =
-	mainSlice.actions;
 
 export const useMainSelector = () =>
 	useSelector<AppState, MainState>(({ [mainSlice.name]: slice }) => slice);
