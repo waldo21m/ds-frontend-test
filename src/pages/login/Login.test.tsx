@@ -23,7 +23,9 @@ describe('Login page', () => {
 		expect.hasAssertions();
 		render(<LoginPage />);
 
-		const emailInput = screen.getByLabelText('Correo electrónico');
+		const emailInput = screen.getByLabelText(
+			'Correo electrónico o nombre de usuario',
+		);
 		const passwordInput = screen.getByLabelText('Contraseña');
 
 		fireEvent.change(emailInput, { target: { value: 'example@mail.com' } });

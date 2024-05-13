@@ -5,13 +5,13 @@ export interface LoginFormInputs {
 	password: string;
 }
 
-export interface LoginState {
+export interface AuthState {
 	verifyIfIsAuthenticated: boolean;
 	isAuthenticated: boolean;
 	status: StatusTypes;
 	error: string | null;
 }
 
-export interface LoginResponse {
+export interface AuthResponse {
 	token: string;
 }

@@ -17,10 +17,10 @@ import {
 } from '@mui/material';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { registerThunk, useRegisterSelector } from './slice/registerSlice';
 import { UserTypes } from '../../utils/userTypes.enum';
 import { FetchStatutes } from '../../utils/fetchStatuses.enum';
 import { type RegisterFormInputs } from '../../types/registerTypes';
+import { registerThunk, useAuthSelector } from '../../slice/authSlice';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import DisruptiveStudioLogo from '../../assets/disruptive-studio-logo.svg';
 import './Register.css';
@@ -37,7 +37,7 @@ const schema = yup.object().shape({
 
 const RegisterPage: React.FC = () => {
 	const dispatch = useAppDispatch();
-	const { status } = useRegisterSelector();
+	const { status } = useAuthSelector();
 	const navigate = useNavigate();
 	const {
 		register,

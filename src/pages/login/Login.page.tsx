@@ -16,9 +16,9 @@ import {
 } from '@mui/material';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { loginThunk, useLoginSelector } from './slice/loginSlice';
 import { FetchStatutes } from '../../utils/fetchStatuses.enum';
-import { type LoginFormInputs } from '../../types/loginTypes';
+import { type LoginFormInputs } from '../../types/authTypes';
+import { loginThunk, useAuthSelector } from '../../slice/authSlice';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import DisruptiveStudioLogo from '../../assets/disruptive-studio-logo.svg';
 import './Login.css';
@@ -32,7 +32,7 @@ const schema = yup.object().shape({
 
 const LoginPage: React.FC = () => {
 	const dispatch = useAppDispatch();
-	const { status } = useLoginSelector();
+	const { status } = useAuthSelector();
 	const navigate = useNavigate();
 	const {
 		register,
