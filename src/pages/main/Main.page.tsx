@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Chip, Pagination, Typography } from '@mui/material';
+import { Box, Chip, IconButton, Pagination, Typography } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
@@ -79,28 +80,35 @@ const MainPage: React.FC = () => {
 										</p>
 										{isAuthenticated && (
 											<div className='cardActions'>
-												{(userData._id === content.createdBy._id ||
+												<IconButton
+													id={`detailButton${content._id}`}
+													data-testid={`detailButton${content._id}`}
+													aria-label='detail'
+													color='secondary'
+												>
+													<VisibilityIcon />
+												</IconButton>
+												{((userData._id === content.createdBy._id &&
+													userData.userType === UserTypes.Creator) ||
 													userData.userType === UserTypes.Admin) && (
-													<Button
-														id={`openEditDialogButton${content._id}`}
-														data-testid={`openEditDialogButton${content._id}`}
-														color='secondary'
-														variant='contained'
-														startIcon={<EditIcon />}
-														sx={{ mr: 1 }}
+													<IconButton
+														id={`editButton${content._id}`}
+														data-testid={`editButton${content._id}`}
+														aria-label='edit'
+														color='primary'
 													>
-														Editar
-													</Button>
+														<EditIcon />
+													</IconButton>
 												)}
 												{userData.userType === UserTypes.Admin && (
-													<Button
-														id={`openDeleteDialogButton${content._id}`}
-														data-testid={`openDeleteDialogButton${content._id}`}
-														variant='contained'
-														startIcon={<DeleteIcon />}
+													<IconButton
+														id={`deleteButton${content._id}`}
+														data-testid={`deleteButton${content._id}`}
+														aria-label='delete'
+														color='error'
 													>
-														Eliminar
-													</Button>
+														<DeleteIcon />
+													</IconButton>
 												)}
 											</div>
 										)}

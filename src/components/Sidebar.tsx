@@ -36,6 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 	const { contentTypes, contentTypeIdSelected } = useSidebarSelector();
 
 	const handleLogout = () => {
+		dispatch(setContentTypeId(undefined));
 		dispatch(logoutThunk());
 		navigate('/login');
 		setOpen(false);
