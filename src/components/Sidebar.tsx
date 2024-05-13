@@ -20,7 +20,7 @@ import {
 	useMainSelector,
 } from '../pages/main/slice/mainSlice';
 import { useAppDispatch } from '../hooks/reduxHooks';
-import DisruptiveStudio from '../assets/disruptive-studio-logo.svg';
+import DisruptiveStudioLogo from '../assets/disruptive-studio-logo.svg';
 import './Sidebar.css';
 
 const handleLogout = () => {
@@ -86,9 +86,9 @@ const Sidebar: React.FC<SidebarProps> = ({
 				<Box className='drawerContainer' component='div'>
 					<Toolbar className='drawerToolbarContainer'>
 						<img
-							src={DisruptiveStudio}
+							src={DisruptiveStudioLogo}
 							alt='Disruptive Studio logo'
-							className='dsLogo'
+							className='disruptiveStudioLogo'
 						/>
 					</Toolbar>
 					<Divider />
