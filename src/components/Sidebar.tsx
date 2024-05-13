@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import {
 	Toolbar,
@@ -14,21 +15,10 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import { FetchStatutes } from '../utils/fetchStatuses.enum';
 import { type SidebarProps } from '../types/sidebarTypes';
-import {
-	filterPosts,
-	showAllPosts,
-	useMainSelector,
-} from '../pages/main/slice/mainSlice';
+import { filterPosts, useMainSelector } from '../pages/main/slice/mainSlice';
 import { useAppDispatch } from '../hooks/reduxHooks';
 import DisruptiveStudioLogo from '../assets/disruptive-studio-logo.svg';
 import './Sidebar.css';
-
-const handleLogout = () => {
-	localStorage.clear();
-	sessionStorage.clear();
-
-	window.location.href = `${import.meta.env.VITE_HOST_BASE}/login`;
-};
 
 const Sidebar: React.FC<SidebarProps> = ({
 	open,
@@ -36,9 +26,18 @@ const Sidebar: React.FC<SidebarProps> = ({
 	handleDrawerTransitionEnd,
 	handleDrawerClose,
 }) => {
+	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const { status, originalPosts, userIdSelected } = useMainSelector();
 	const [users, setUsers] = useState<number[]>([]);
+
+	const handleLogout = () => {
+		localStorage.clear();
+		sessionStorage.clear();
+
+		navigate('/login');
+		setOpen(false);
+	};
 
 	useEffect(() => {
 		if (status === FetchStatutes.Succeeded) {
@@ -51,8 +50,8 @@ const Sidebar: React.FC<SidebarProps> = ({
 		}
 	}, [originalPosts, status]);
 
-	const dispatchShowAllPosts = () => {
-		dispatch(showAllPosts());
+	const gotToHome = () => {
+		navigate('/');
 		setOpen(false);
 	};
 
@@ -98,7 +97,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 								id='homeListItemButton'
 								data-testid='homeListItemButton'
 								selected={userIdSelected === undefined}
-								onClick={dispatchShowAllPosts}
+								onClick={gotToHome}
 							>
 								<ListItemIcon className='listItemIcon'>
 									<HomeIcon />

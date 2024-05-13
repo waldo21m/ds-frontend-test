@@ -1,66 +1,19 @@
-.loginPage {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 100vw;
-	min-height: 100vh;
-	background-color: #efefef;
-}
-
-.loginCard {
+.loginContainer {
 	display: flex;
 	flex-direction: column;
-  align-items: center;
-	justify-content: center;
-	width: 100%;
-	min-height: 100vh;
-	padding: 0 16px;
-	border-radius: 8px;
-	box-shadow: 0 2px 4px rgb(9 35 66 / 25%);
-	background-color: #fff;
-}
-
-.loginHeader {
-	display: grid;
-	grid-template-columns: auto auto;
 	align-items: center;
 	justify-content: center;
-	column-gap: 16px;
-  margin-top: 8px;
-	margin-bottom: 16px;
+	width: 100%;
+  min-height: 88vh;
+	padding: 16px 24px 0;
 }
 
-.loginCleverpyLogo {
-	width: 60px;
-	height: 60px;
-	border-radius: 50%;
+.loginDisruptiveStudioLogo {
+	width: 265px;
 }
 
-.loginButton {
-  margin-bottom: 8px;
-}
-
-@media (width >= 768px) and (height >= 650px) {
-	.loginCard {
-    width: 534px;
-    height: 632px;
-    min-height: auto;
+@media (width >= 768px) {
+	.loginFormContainer {
+		width: 400px;
 	}
-
-  .loginHeader {
-    margin-top: 0;
-  }
-
-  .loginCleverpyLogo {
-    width: 80px;
-    height: 80px;
-  }
-
-  .loginFormContainer {
-    width: 300px;
-  }
-
-  .loginButton {
-    margin-bottom: 0;
-  }
 }

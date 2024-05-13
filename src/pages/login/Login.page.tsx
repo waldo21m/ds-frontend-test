@@ -17,14 +17,13 @@ import {
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { type LoginFormInputs } from '../../types/loginTypes';
-import CleverpyLogo from '../../assets/cleverpy-logo.jpeg';
+import DisruptiveStudioLogo from '../../assets/disruptive-studio-logo.svg';
 import './Login.css';
 
 const schema = yup.object().shape({
-	email: yup
+	emailOrUsername: yup
 		.string()
-		.required('El correo electrónico es obligatorio')
-		.email('El correo electrónico no es válido'),
+		.required('El correo electrónico es obligatorio'),
 	password: yup.string().required('La contraseña es obligatoria'),
 });
 
@@ -34,9 +33,9 @@ const LoginPage: React.FC = () => {
 		register,
 		handleSubmit,
 		formState: { errors, isValid },
-		trigger,
 	} = useForm<LoginFormInputs>({
 		resolver: yupResolver(schema),
+		mode: 'onBlur',
 	});
 	const [showPassword, setShowPassword] = React.useState(false);
 
@@ -49,86 +48,90 @@ const LoginPage: React.FC = () => {
 	};
 
 	const onSubmit = (data: LoginFormInputs) => {
-		localStorage.setItem('id', data.email);
-		navigate('/inicio');
+		localStorage.setItem('id', data.emailOrUsername);
+		navigate('/');
 	};
 
 	return (
-		<Box
-			component='div'
-			id='loginPage'
-			data-testid='loginPage'
-			className='loginPage'
-		>
-			<Box component='div' className='loginCard'>
-				<Box component='div' className='loginHeader'>
-					<img
-						src={CleverpyLogo}
-						alt='Cleverpy logo'
-						className='loginCleverpyLogo'
-					/>
-					<Typography variant='h4' component='div'>
-						Cleverpy test
-					</Typography>
-				</Box>
-				<Typography variant='h5' sx={{ textAlign: 'center', mb: 2 }}>
-					¡Bienvenido 👋🏽!
-				</Typography>
-				<form className='loginFormContainer' onSubmit={handleSubmit(onSubmit)}>
-					<TextField
-						{...register('email')}
-						error={Boolean(errors.email)}
-						helperText={errors.email?.message}
-						label='Correo electrónico'
-						variant='standard'
-						fullWidth
-						onBlur={() => {
-							trigger('email');
-						}}
-						sx={{ mb: 2 }}
-					/>
-					<FormControl variant='standard' fullWidth sx={{ mb: 2 }}>
-						<InputLabel htmlFor='standard-adornment-password'>
-							Contraseña
-						</InputLabel>
-						<Input
-							{...register('password')}
-							id='standard-adornment-password'
-							type={showPassword ? 'text' : 'password'}
-							error={Boolean(errors.password)}
-							onBlur={() => {
-								trigger('password');
-							}}
-							endAdornment={
-								<InputAdornment position='end'>
-									<IconButton
-										aria-label='toggle password visibility'
-										onClick={handleClickShowPassword}
-										onMouseDown={handleMouseDownPassword}
-									>
-										{showPassword ? <VisibilityOff /> : <Visibility />}
-									</IconButton>
-								</InputAdornment>
-							}
-						/>
-						<FormHelperText error={Boolean(errors.password)}>
-							{errors.password?.message}
-						</FormHelperText>
-					</FormControl>
-					<Button
-						id='loginButton'
-						data-testid='loginButton'
-						className='loginButton'
-						color='primary'
-						variant='contained'
-						type='submit'
-						disabled={!isValid}
-						fullWidth
-					>
-						Iniciar sesión
-					</Button>
-				</form>
+		<Box component='div' className='loginContainer'>
+			<Box component='div' sx={{ mb: 1 }}>
+				<img
+					src={DisruptiveStudioLogo}
+					alt='Disruptive Studio logo'
+					className='loginDisruptiveStudioLogo'
+				/>
 			</Box>
+			<Typography variant='h5' sx={{ textAlign: 'center', mb: 2 }}>
+				¡Bienvenido 👋🏽!
+			</Typography>
+			<form className='loginFormContainer' onSubmit={handleSubmit(onSubmit)}>
+				<TextField
+					{...register('emailOrUsername')}
+					error={Boolean(errors.emailOrUsername)}
+					helperText={errors.emailOrUsername?.message}
+					label='Correo electrónico'
+					variant='standard'
+					fullWidth
+					sx={{ mb: 2 }}
+				/>
+				<FormControl variant='standard' fullWidth sx={{ mb: 2 }}>
+					<InputLabel htmlFor='standard-adornment-password'>
+						Contraseña
+					</InputLabel>
+					<Input
+						{...register('password')}
+						id='standard-adornment-password'
+						type={showPassword ? 'text' : 'password'}
+						error={Boolean(errors.password)}
+						endAdornment={
+							<InputAdornment position='end'>
+								<IconButton
+									aria-label='toggle password visibility'
+									onClick={handleClickShowPassword}
+									onMouseDown={handleMouseDownPassword}
+								>
+									{showPassword ? <VisibilityOff /> : <Visibility />}
+								</IconButton>
+							</InputAdornment>
+						}
+					/>
+					<FormHelperText error={Boolean(errors.password)}>
+						{errors.password?.message}
+					</FormHelperText>
+				</FormControl>
+				<Button
+					id='loginButton'
+					data-testid='loginButton'
+					color='primary'
+					variant='contained'
+					type='submit'
+					disabled={!isValid}
+					fullWidth
+					sx={{ mb: 1 }}
+				>
+					Iniciar sesión
+				</Button>
+				<Button
+					id='registerButton'
+					data-testid='registerButton'
+					color='secondary'
+					variant='contained'
+					fullWidth
+					sx={{ mb: 1 }}
+				>
+					Registrarse
+				</Button>
+				<Button
+					id='homeButton'
+					data-testid='homeButton'
+					className='homeButton'
+					variant='text'
+					fullWidth
+					onClick={() => navigate('/')}
+				>
+					Volver al home
+				</Button>
+			</form>
 		</Box>
 	);
 };
