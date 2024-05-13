@@ -5,7 +5,7 @@ import {
 	type PayloadAction,
 } from '@reduxjs/toolkit';
 import { FetchStatutes } from '../../../utils/fetchStatuses.enum';
-import axiosClient from '../../../utils/tempClient';
+import axiosClient from '../../../utils/axiosClient';
 import {
 	type Post,
 	type MainState,

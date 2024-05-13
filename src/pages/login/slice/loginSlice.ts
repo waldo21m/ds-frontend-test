@@ -7,8 +7,8 @@ import {
 	type PayloadAction,
 } from '@reduxjs/toolkit';
 import { toastConfig } from '../../../utils/toastConfig';
-import axiosClient from '../../../utils/tempClient';
 import { FetchStatutes } from '../../../utils/fetchStatuses.enum';
+import axiosClient from '../../../utils/axiosClient';
 import {
 	type LoginState,
 	type LoginFormInputs,
