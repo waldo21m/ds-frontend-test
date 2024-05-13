@@ -1,29 +1,39 @@
 import { type StatusTypes } from './statusTypes';
 
-export interface Post {
-	userId: number;
-	id: number;
-	title: string;
-	body: string;
+interface ContentType {
+	_id: string;
+	name: string;
+}
+
+interface Topic {
+	_id: string;
+	name: string;
+}
+
+interface CreatedBy {
+	_id: string;
+	username: string;
+}
+
+export interface Content {
+	_id: string;
+	name: string;
+	data: string;
+	contentType: ContentType;
+	topic: Topic;
+	createdBy: CreatedBy;
+	isDeleted: boolean;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface ContentResponse {
+	contents: Content[];
+	totalPages: number;
 }
 
 export interface MainState {
-	userIdSelected?: number;
-	originalPosts: Post[];
-	posts: Post[];
+	contentResponse: ContentResponse;
 	status: StatusTypes;
 	error: string | null;
 }
-
-export interface FilterPosts {
-	filteredPosts: Post[];
-	userIdSelected: number;
-}
-
-export interface RemovePost {
-	originalPosts: Post[];
-	posts: Post[];
-	userIdSelected?: number;
-}
-
-export type UpdatePost = Omit<RemovePost, 'userIdSelected'>;

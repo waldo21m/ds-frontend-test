@@ -1,4 +1,4 @@
-.postsContainer {
+.contentsContainer {
 	display: grid;
 	grid-template-columns: auto;
 	gap: 8px 8px;
@@ -13,33 +13,20 @@
 	box-shadow: 0 2px 4px rgb(9 35 66 / 25%);
 }
 
-.cardHeader {
-	display: grid;
-	grid-template-columns: auto 1fr;
-	column-gap: 8px;
-	align-items: center;
-  margin-bottom: 8px;
-}
-
-.cardAvatar {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 40px;
-	height: 40px;
-	background-color: var(--indigo-a200);
-	color: white;
-	border-radius: 50px;
-	font-size: 1.25rem;
-	font-weight: bold;
-}
-
 .cardTitle {
   margin: 0;
 	font-weight: 500;
 	font-size: 1.125rem;
 	line-height: 1.6;
 	letter-spacing: 0.0075em;
+  margin-bottom: 8px;
+}
+
+.chipsContainer {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  margin-bottom: 8px;
 }
 
 .cardBody {
@@ -67,6 +54,13 @@
   margin-bottom: 16px;
 }
 
+.paginator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+}
+
 @media (width < 600px) {
 	.errorParagraph {
 		font-size: 1.2rem;
@@ -75,13 +69,13 @@
 }
 
 @media (width >= 1024px) {
-	.postsContainer {
+	.contentsContainer {
 		grid-template-columns: auto auto;
 	}
 }
 
 @media (width >= 1536px) {
-	.postsContainer {
+	.contentsContainer {
 		grid-template-columns: repeat(4, auto);
 	}
 }

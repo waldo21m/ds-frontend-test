@@ -1,160 +1,154 @@
-import { toast } from 'react-toastify';
-import React, { useEffect } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Chip, IconButton, Pagination, Typography } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
-	fetchPosts,
-	updatePost,
-	removePost,
+	findAllContents,
+	findAllContentsByContentTypeId,
 	useMainSelector,
 } from './slice/mainSlice';
-import EditDialog from './components/EditDialog';
-import DeleteDialog from './components/DeleteDialog';
-import { toastConfig } from '../../utils/toastConfig';
+import { UserTypes } from '../../utils/userTypes.enum';
 import { FetchStatutes } from '../../utils/fetchStatuses.enum';
-import { type Post } from '../../types/mainTypes';
+import { useSidebarSelector } from '../../slice/sidebarSlice';
+import { useAuthSelector } from '../../slice/authSlice';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import Loader from '../../components/Loader';
-import CustomBreadcrumbs from '../../components/CustomBreadcrumbs';
 import FetchErrorImg from '../../assets/fetchError.jpg';
 import './Main.css';
 
 const MainPage: React.FC = () => {
 	const dispatch = useAppDispatch();
-	const { originalPosts, posts, userIdSelected, status, error } =
-		useMainSelector();
-	const [selectedPost, setSelectedPost] = React.useState<Post>();
-	const [openEditDialog, setOpenEditDialog] = React.useState(false);
-	const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-
-	const handleClickOpenEditDialog = (post: Post) => () => {
-		setSelectedPost(post);
-		setOpenEditDialog(true);
-	};
-
-	const handleClickOpenDeleteDialog = (post: Post) => () => {
-		setSelectedPost(post);
-		setOpenDeleteDialog(true);
-	};
-
-	const handleCloseDialog = () => {
-		setSelectedPost(undefined);
-		setOpenEditDialog(false);
-		setOpenDeleteDialog(false);
-	};
-
-	const handleEditPost = (post: Post) => {
-		const updatedOriginalPosts = originalPosts.map((originalPost) => {
-			if (originalPost.id === post.id) {
-				return post;
-			}
-
-			return originalPost;
-		});
-
-		const updatedPosts = posts.map((oldPost) => {
-			if (oldPost.id === post.id) {
-				return post;
-			}
-
-			return oldPost;
-		});
-
-		dispatch(
-			updatePost({
-				originalPosts: updatedOriginalPosts,
-				posts: updatedPosts,
-			}),
-		);
-
-		toast.success('Modificaste un post con éxito', toastConfig);
-		handleCloseDialog();
-	};
-
-	const handleDeletePost = (postId: number) => () => {
-		const postDeleted = originalPosts.find((post) => post.id === postId);
-		const originalPostsFiltered = originalPosts.filter(
-			(post) => post.id !== postId,
-		);
-		let postsFiltered = posts.filter((post) => post.id !== postId);
-		let userId = userIdSelected;
-
-		if (postsFiltered.length === 0) {
-			postsFiltered = originalPostsFiltered;
-			userId = undefined;
-		}
-
-		dispatch(
-			removePost({
-				originalPosts: originalPostsFiltered,
-				posts: postsFiltered,
-				userIdSelected: userId,
-			}),
-		);
-
-		toast.success(`Eliminaste el post ${postDeleted?.title}`, toastConfig);
-		handleCloseDialog();
-	};
+	const { isAuthenticated, userData } = useAuthSelector();
+	const { contentResponse, status, error } = useMainSelector();
+	const { contentTypeIdSelected } = useSidebarSelector();
+	const [page, setPage] = useState(1);
 
 	useEffect(() => {
-		if (status === FetchStatutes.Idle) {
-			dispatch(fetchPosts());
+		if (contentTypeIdSelected === undefined) {
+			dispatch(findAllContents({ page, limit: 20 }));
+		} else {
+			dispatch(
+				findAllContentsByContentTypeId({
+					page,
+					limit: 20,
+					contentTypeIdSelected,
+				}),
+			);
 		}
-	}, [status, dispatch]);
+	}, [contentTypeIdSelected, dispatch, page]);
+
+	useEffect(() => {
+		setPage(1);
+	}, [contentTypeIdSelected]);
 
 	return (
 		<Box component='div' id='mainPage' data-testid='mainPage'>
-			<CustomBreadcrumbs />
-
 			{status === FetchStatutes.Loading && <Loader />}
 
-			{status === FetchStatutes.Succeeded && (
-				<div
-					id='postsContainer'
-					data-testid='postsContainer'
-					className='postsContainer'
-				>
-					{posts.map((post) => {
-						return (
-							<div
-								id={`cardContainer${post.id}`}
-								data-testid={`cardContainer${post.id}`}
-								key={post.id}
-								className='cardContainer'
-							>
-								<div className='cardHeader'>
-									<div className='cardAvatar'>{post.userId}</div>
-									<h2 className='cardTitle'>{post.title}</h2>
-								</div>
-								<p className='cardBody'>{post.body}</p>
-								<div className='cardActions'>
-									<Button
-										id={`openEditDialogButton${post.id}`}
-										data-testid={`openEditDialogButton${post.id}`}
-										color='secondary'
-										variant='contained'
-										startIcon={<EditIcon />}
-										onClick={handleClickOpenEditDialog(post)}
-										sx={{ mr: 1 }}
+			{status === FetchStatutes.Succeeded &&
+				contentResponse.contents.length > 0 && (
+					<>
+						<div
+							id='contentsContainer'
+							data-testid='contentsContainer'
+							className='contentsContainer'
+						>
+							{contentResponse.contents.map((content) => {
+								return (
+									<div
+										id={`cardContainer${content._id}`}
+										data-testid={`cardContainer${content._id}`}
+										key={content._id}
+										className='cardContainer'
 									>
-										Editar
-									</Button>
-									<Button
-										id={`openDeleteDialogButton${post.id}`}
-										data-testid={`openDeleteDialogButton${post.id}`}
-										variant='contained'
-										startIcon={<DeleteIcon />}
-										onClick={handleClickOpenDeleteDialog(post)}
-									>
-										Eliminar
-									</Button>
-								</div>
-							</div>
-						);
-					})}
-				</div>
-			)}
+										<h2 className='cardTitle'>{content.name}</h2>
+										<div className='chipsContainer'>
+											<Chip
+												label={content.contentType.name}
+												color='primary'
+												className='contentTypeChip'
+											/>
+											<Chip
+												label={content.topic.name}
+												color='secondary'
+												className='cardChip'
+											/>
+										</div>
+										<p className='cardBody'>
+											<b>Creado por</b> {content.createdBy.username}
+										</p>
+										{isAuthenticated && (
+											<div className='cardActions'>
+												<IconButton
+													id={`detailButton${content._id}`}
+													data-testid={`detailButton${content._id}`}
+													aria-label='detail'
+													color='secondary'
+												>
+													<VisibilityIcon />
+												</IconButton>
+												{((userData._id === content.createdBy._id &&
+													userData.userType === UserTypes.Creator) ||
+													userData.userType === UserTypes.Admin) && (
+													<IconButton
+														id={`editButton${content._id}`}
+														data-testid={`editButton${content._id}`}
+														aria-label='edit'
+														color='primary'
+													>
+														<EditIcon />
+													</IconButton>
+												)}
+												{userData.userType === UserTypes.Admin && (
+													<IconButton
+														id={`deleteButton${content._id}`}
+														data-testid={`deleteButton${content._id}`}
+														aria-label='delete'
+														color='error'
+													>
+														<DeleteIcon />
+													</IconButton>
+												)}
+											</div>
+										)}
+									</div>
+								);
+							})}
+						</div>
+
+						<Box className='paginator'>
+							<Pagination
+								count={contentResponse.totalPages}
+								defaultPage={page}
+								color='secondary'
+								size='large'
+								showFirstButton
+								showLastButton
+								onChange={(_, value) => setPage(value)}
+							/>
+						</Box>
+					</>
+				)}
+
+			{status === FetchStatutes.Succeeded &&
+				contentResponse.contents.length === 0 && (
+					<Box
+						id='mainErrorContainer'
+						data-testid='mainErrorContainer'
+						className='mainErrorContainer'
+						component='div'
+					>
+						<img
+							src={FetchErrorImg}
+							alt='Fetch error'
+							className='fetchErrorImg'
+						/>
+						<Typography variant='h5' className='errorParagraph'>
+							No hay contenidos disponibles...
+						</Typography>
+					</Box>
+				)}
 
 			{status === FetchStatutes.Failed && (
 				<Box
@@ -172,24 +166,6 @@ const MainPage: React.FC = () => {
 						{error}
 					</Typography>
 				</Box>
-			)}
-
-			{selectedPost && (
-				<DeleteDialog
-					postId={selectedPost.id}
-					open={openDeleteDialog}
-					handleClose={handleCloseDialog}
-					handleDeletePost={handleDeletePost}
-				/>
-			)}
-
-			{selectedPost && (
-				<EditDialog
-					post={selectedPost}
-					open={openEditDialog}
-					handleClose={handleCloseDialog}
-					handleEditPost={handleEditPost}
-				/>
 			)}
 		</Box>
 	);
