@@ -15,7 +15,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import { FetchStatutes } from '../utils/fetchStatuses.enum';
 import { type SidebarProps } from '../types/sidebarTypes';
-import { useAuthSelector } from '../slice/authSlice';
+import { logoutThunk, useAuthSelector } from '../slice/authSlice';
 import { filterPosts, useMainSelector } from '../pages/main/slice/mainSlice';
 import { useAppDispatch } from '../hooks/reduxHooks';
 import DisruptiveStudioLogo from '../assets/disruptive-studio-logo.svg';
@@ -34,9 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 	const [users, setUsers] = useState<number[]>([]);
 
 	const handleLogout = () => {
-		localStorage.clear();
-		sessionStorage.clear();
-
+		dispatch(logoutThunk());
 		navigate('/login');
 		setOpen(false);
 	};

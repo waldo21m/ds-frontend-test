@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { useRef } from 'react';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
+import Session from './components/Session';
 import { makeStore, type AppStore } from './App.store';
 import { router } from './App.routes';
 import '@fontsource/roboto/300.css';
@@ -23,8 +24,10 @@ const App: React.FC = () => {
 		<Provider store={storeRef.current}>
 			<ThemeProvider theme={theme}>
 				<StyledEngineProvider injectFirst>
-					<ToastContainer />
-					<RouterProvider router={router} />
+					<Session>
+						<ToastContainer />
+						<RouterProvider router={router} />
+					</Session>
 				</StyledEngineProvider>
 			</ThemeProvider>
 		</Provider>

@@ -13,22 +13,24 @@ export interface RegisterFormInputs {
 	userType: string;
 }
 
+export interface DsJWT {
+	_id: string;
+	username: string;
+	email: string;
+	userType: UserTypes;
+	iat: number;
+}
+
+export type UserData = Omit<DsJWT, 'iat'>;
+
 export interface AuthState {
 	verifyIfIsAuthenticated: boolean;
 	isAuthenticated: boolean;
+	userData: UserData;
 	status: StatusTypes;
 	error: string | null;
 }
 
 export interface AuthResponse {
 	token: string;
-}
-
-export interface DsJWT {
-	_id: string;
-	username: string;
-	email: string;
-	password: string;
-	userType: UserTypes;
-	iat: number;
 }
