@@ -27,7 +27,7 @@ const handleLogout = () => {
 	localStorage.clear();
 	sessionStorage.clear();
 
-	window.location.href = `${import.meta.env.VITE_HOST_BASE}`;
+	window.location.href = `${import.meta.env.VITE_HOST_BASE}/login`;
 };
 
 const Sidebar: React.FC<SidebarProps> = ({
