@@ -4,14 +4,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { type HeaderProps } from '../types/headerTypes';
 import './Header.css';
 
-const Header: React.FC<HeaderProps> = ({
-	isClosing,
-	mobileOpen,
-	setMobileOpen,
-}) => {
+const Header: React.FC<HeaderProps> = ({ isClosing, open, setOpen }) => {
 	const handleDrawerToggle = () => {
 		if (!isClosing) {
-			setMobileOpen(!mobileOpen);
+			setOpen(!open);
 		}
 	};
 
@@ -23,7 +19,6 @@ const Header: React.FC<HeaderProps> = ({
 				<IconButton
 					id='menuDrawerButton'
 					data-testid='menuDrawerButton'
-					className='drawerIcon'
 					color='inherit'
 					aria-label='Open drawer'
 					onClick={handleDrawerToggle}

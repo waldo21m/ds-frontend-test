@@ -1,5 +1,5 @@
 export interface HeaderProps {
 	isClosing: boolean;
-	mobileOpen: boolean;
-	setMobileOpen: (mobileOpen: boolean) => void;
+	open: boolean;
+	setOpen: (open: boolean) => void;
 }

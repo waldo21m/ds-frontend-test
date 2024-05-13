@@ -6,19 +6,19 @@ import BaseLayout from './layouts/Base.layout';
 
 const router = createBrowserRouter([
 	{
-		path: '/',
-		element: <LoginPage />,
-		errorElement: <ErrorPage />,
-	},
-	{
 		element: <BaseLayout />,
 		errorElement: <ErrorPage />,
 		children: [
 			{
-				path: '/inicio',
+				path: '/',
 				element: <MainPage />,
 			},
 		],
+	},
+	{
+		path: '/login',
+		element: <LoginPage />,
+		errorElement: <ErrorPage />,
 	},
 ]);
 

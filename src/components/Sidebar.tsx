@@ -9,7 +9,6 @@ import {
 	ListItemText,
 	Box,
 	Drawer,
-	Typography,
 } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
@@ -21,7 +20,7 @@ import {
 	useMainSelector,
 } from '../pages/main/slice/mainSlice';
 import { useAppDispatch } from '../hooks/reduxHooks';
-import CleverpyLogo from '../assets/cleverpy-logo.jpeg';
+import DisruptiveStudio from '../assets/disruptive-studio-logo.svg';
 import './Sidebar.css';
 
 const handleLogout = () => {
@@ -32,8 +31,8 @@ const handleLogout = () => {
 };
 
 const Sidebar: React.FC<SidebarProps> = ({
-	mobileOpen,
-	setMobileOpen,
+	open,
+	setOpen,
 	handleDrawerTransitionEnd,
 	handleDrawerClose,
 }) => {
@@ -54,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
 	const dispatchShowAllPosts = () => {
 		dispatch(showAllPosts());
-		setMobileOpen(false);
+		setOpen(false);
 	};
 
 	const filterPostsByUserId = (userId: number) => () => {
@@ -63,64 +62,8 @@ const Sidebar: React.FC<SidebarProps> = ({
 		);
 
 		dispatch(filterPosts({ filteredPosts, userIdSelected: userId }));
-		setMobileOpen(false);
+		setOpen(false);
 	};
-
-	const drawer = (
-		<Box className='drawerContainer' component='div'>
-			<Toolbar className='drawerToolbarContainer'>
-				<img src={CleverpyLogo} alt='Cleverpy logo' className='cleverpyLogo' />
-				<Typography variant='h6' component='div'>
-					Cleverpy test
-				</Typography>
-			</Toolbar>
-			<Divider />
-			<List className='listMenu'>
-				<ListItem disablePadding>
-					<ListItemButton
-						id='homeListItemButton'
-						data-testid='homeListItemButton'
-						selected={userIdSelected === undefined}
-						onClick={dispatchShowAllPosts}
-					>
-						<ListItemIcon className='listItemIcon'>
-							<HomeIcon />
-						</ListItemIcon>
-						<ListItemText primary='Inicio' />
-					</ListItemButton>
-				</ListItem>
-				{users.map((user) => {
-					return (
-						<ListItem key={user} disablePadding>
-							<ListItemButton
-								id={`postListItemButton${user}`}
-								data-testid={`postListItemButton${user}`}
-								selected={userIdSelected === user}
-								onClick={filterPostsByUserId(user)}
-							>
-								<ListItemText primary={`Posts del usuario ${user}`} />
-							</ListItemButton>
-						</ListItem>
-					);
-				})}
-			</List>
-			<Divider />
-			<List>
-				<ListItem disablePadding>
-					<ListItemButton
-						id='logoutListItemButton'
-						data-testid='logoutListItemButton'
-						onClick={handleLogout}
-					>
-						<ListItemIcon className='listItemIcon'>
-							<LogoutIcon />
-						</ListItemIcon>
-						<ListItemText primary='Cerrar sesión' />
-					</ListItemButton>
-				</ListItem>
-			</List>
-		</Box>
-	);
 
 	return (
 		<Box
@@ -131,19 +74,69 @@ const Sidebar: React.FC<SidebarProps> = ({
 			aria-label='Sidebar'
 		>
 			<Drawer
-				className='mobileDrawer'
+				className='drawer'
 				variant='temporary'
-				open={mobileOpen}
+				open={open}
 				onTransitionEnd={handleDrawerTransitionEnd}
 				onClose={handleDrawerClose}
 				ModalProps={{
 					keepMounted: true,
 				}}
 			>
-				{drawer}
-			</Drawer>
-			<Drawer className='desktopDrawer' variant='permanent' open>
-				{drawer}
+				<Box className='drawerContainer' component='div'>
+					<Toolbar className='drawerToolbarContainer'>
+						<img
+							src={DisruptiveStudio}
+							alt='Disruptive Studio logo'
+							className='dsLogo'
+						/>
+					</Toolbar>
+					<Divider />
+					<List className='listMenu'>
+						<ListItem disablePadding>
+							<ListItemButton
+								id='homeListItemButton'
+								data-testid='homeListItemButton'
+								selected={userIdSelected === undefined}
+								onClick={dispatchShowAllPosts}
+							>
+								<ListItemIcon className='listItemIcon'>
+									<HomeIcon />
+								</ListItemIcon>
+								<ListItemText primary='Inicio' />
+							</ListItemButton>
+						</ListItem>
+						{users.map((user) => {
+							return (
+								<ListItem key={user} disablePadding>
+									<ListItemButton
+										id={`postListItemButton${user}`}
+										data-testid={`postListItemButton${user}`}
+										selected={userIdSelected === user}
+										onClick={filterPostsByUserId(user)}
+									>
+										<ListItemText primary={`Posts del usuario ${user}`} />
+									</ListItemButton>
+								</ListItem>
+							);
+						})}
+					</List>
+					<Divider />
+					<List>
+						<ListItem disablePadding>
+							<ListItemButton
+								id='logoutListItemButton'
+								data-testid='logoutListItemButton'
+								onClick={handleLogout}
+							>
+								<ListItemIcon className='listItemIcon'>
+									<LogoutIcon />
+								</ListItemIcon>
+								<ListItemText primary='Cerrar sesión' />
+							</ListItemButton>
+						</ListItem>
+					</List>
+				</Box>
 			</Drawer>
 		</Box>
 	);
