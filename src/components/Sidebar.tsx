@@ -15,6 +15,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import { FetchStatutes } from '../utils/fetchStatuses.enum';
 import { type SidebarProps } from '../types/sidebarTypes';
+import { useAuthSelector } from '../slice/authSlice';
 import { filterPosts, useMainSelector } from '../pages/main/slice/mainSlice';
 import { useAppDispatch } from '../hooks/reduxHooks';
 import DisruptiveStudioLogo from '../assets/disruptive-studio-logo.svg';
@@ -28,6 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
+	const { isAuthenticated } = useAuthSelector();
 	const { status, originalPosts, userIdSelected } = useMainSelector();
 	const [users, setUsers] = useState<number[]>([]);
 
@@ -120,21 +122,26 @@ const Sidebar: React.FC<SidebarProps> = ({
 							);
 						})}
 					</List>
-					<Divider />
-					<List>
-						<ListItem disablePadding>
-							<ListItemButton
-								id='logoutListItemButton'
-								data-testid='logoutListItemButton'
-								onClick={handleLogout}
-							>
-								<ListItemIcon className='listItemIcon'>
-									<LogoutIcon />
-								</ListItemIcon>
-								<ListItemText primary='Cerrar sesión' />
-							</ListItemButton>
-						</ListItem>
-					</List>
+
+					{isAuthenticated && (
+						<>
+							<Divider />
+							<List>
+								<ListItem disablePadding>
+									<ListItemButton
+										id='logoutListItemButton'
+										data-testid='logoutListItemButton'
+										onClick={handleLogout}
+									>
+										<ListItemIcon className='listItemIcon'>
+											<LogoutIcon />
+										</ListItemIcon>
+										<ListItemText primary='Cerrar sesión' />
+									</ListItemButton>
+								</ListItem>
+							</List>
+						</>
+					)}
 				</Box>
 			</Drawer>
 		</Box>
