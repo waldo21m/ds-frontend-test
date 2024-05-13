@@ -1,0 +1,19 @@
+.registerContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+  min-height: 88vh;
+	padding: 16px 24px 0;
+}
+
+.registerDisruptiveStudioLogo {
+	width: 265px;
+}
+
+@media (width >= 768px) {
+	.registerFormContainer {
+		width: 400px;
+	}
+}
