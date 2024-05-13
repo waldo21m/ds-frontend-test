@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
 	Toolbar,
 	Divider,
@@ -13,10 +13,9 @@ import {
 } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
-import { FetchStatutes } from '../utils/fetchStatuses.enum';
 import { type SidebarProps } from '../types/sidebarTypes';
+import { findAllContentTypes, useSidebarSelector } from '../slice/sidebarSlice';
 import { logoutThunk, useAuthSelector } from '../slice/authSlice';
-import { filterPosts, useMainSelector } from '../pages/main/slice/mainSlice';
 import { useAppDispatch } from '../hooks/reduxHooks';
 import DisruptiveStudioLogo from '../assets/disruptive-studio-logo.svg';
 import './Sidebar.css';
@@ -30,8 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const { isAuthenticated } = useAuthSelector();
-	const { status, originalPosts, userIdSelected } = useMainSelector();
-	const [users, setUsers] = useState<number[]>([]);
+	const { contentTypes, contentTypeIdSelected } = useSidebarSelector();
 
 	const handleLogout = () => {
 		dispatch(logoutThunk());
@@ -40,28 +38,19 @@ const Sidebar: React.FC<SidebarProps> = ({
 	};
 
 	useEffect(() => {
-		if (status === FetchStatutes.Succeeded) {
-			const userIds = originalPosts.map((post) => post.userId);
-			const uniqueUserIds = userIds.filter(
-				(value, index, self) => self.indexOf(value) === index,
-			);
-
-			setUsers(uniqueUserIds);
-		}
-	}, [originalPosts, status]);
+		dispatch(findAllContentTypes());
+	}, [dispatch]);
 
 	const gotToHome = () => {
 		navigate('/');
 		setOpen(false);
 	};
 
-	const filterPostsByUserId = (userId: number) => () => {
-		const filteredPosts = originalPosts.filter(
-			(post) => post.userId === userId,
-		);
-
-		dispatch(filterPosts({ filteredPosts, userIdSelected: userId }));
-		setOpen(false);
+	// TODO: Make this later...
+	// eslint-disable-next-line unicorn/consistent-function-scoping
+	const filterContentsByContentTypeId = (contentTypeId: string) => () => {
+		// eslint-disable-next-line no-console
+		console.log(contentTypeId);
 	};
 
 	return (
@@ -96,7 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 							<ListItemButton
 								id='homeListItemButton'
 								data-testid='homeListItemButton'
-								selected={userIdSelected === undefined}
+								selected={contentTypeIdSelected === undefined}
 								onClick={gotToHome}
 							>
 								<ListItemIcon className='listItemIcon'>
@@ -105,16 +94,16 @@ const Sidebar: React.FC<SidebarProps> = ({
 								<ListItemText primary='Inicio' />
 							</ListItemButton>
 						</ListItem>
-						{users.map((user) => {
+						{contentTypes.map((contentType) => {
 							return (
-								<ListItem key={user} disablePadding>
+								<ListItem key={contentType._id} disablePadding>
 									<ListItemButton
-										id={`postListItemButton${user}`}
-										data-testid={`postListItemButton${user}`}
-										selected={userIdSelected === user}
-										onClick={filterPostsByUserId(user)}
+										id={`postListItemButton${contentType._id}`}
+										data-testid={`postListItemButton${contentType._id}`}
+										selected={contentTypeIdSelected === contentType._id}
+										onClick={filterContentsByContentTypeId(contentType._id)}
 									>
-										<ListItemText primary={`Posts del usuario ${user}`} />
+										<ListItemText primary={contentType.name} />
 									</ListItemButton>
 								</ListItem>
 							);
