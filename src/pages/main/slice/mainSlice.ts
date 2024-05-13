@@ -34,6 +34,26 @@ export const findAllContents = createAsyncThunk<
 	}
 });
 
+export const findAllContentsByContentTypeId = createAsyncThunk<
+	ContentResponse,
+	{ page: number; limit: number; contentTypeIdSelected: string },
+	{ rejectValue: string }
+>('contents/findAllByContentTypeId', async (request, thunkAPI) => {
+	try {
+		const response = await axiosApi.get(
+			`/api/v1/content-types/${request.contentTypeIdSelected}/contents?page=${request.page}&limit=${request.limit}`,
+		);
+
+		return response.data;
+	} catch (error) {
+		if (isAxiosError(error)) {
+			return thunkAPI.rejectWithValue(error.response?.data.message);
+		}
+
+		return thunkAPI.rejectWithValue('Ocurrió un error inesperado');
+	}
+});
+
 export const initialState: MainState = {
 	contentResponse: {} as ContentResponse,
 	status: FetchStatutes.Idle,
@@ -62,6 +82,28 @@ export const mainSlice = createSlice({
 					const errorMessage =
 						action.payload ??
 						'Error al consultar los contenidos, intente más tarde...';
+					state.status = FetchStatutes.Failed;
+					state.error = errorMessage;
+
+					toast.error(errorMessage, toastConfig);
+				},
+			)
+			.addCase(findAllContentsByContentTypeId.pending, (state) => {
+				state.status = FetchStatutes.Loading;
+			})
+			.addCase(
+				findAllContentsByContentTypeId.fulfilled,
+				(state, action: PayloadAction<ContentResponse>) => {
+					state.status = FetchStatutes.Succeeded;
+					state.contentResponse = action.payload;
+				},
+			)
+			.addCase(
+				findAllContentsByContentTypeId.rejected,
+				(state, action: PayloadAction<string | undefined>) => {
+					const errorMessage =
+						action.payload ??
+						'Error al consultar los contenidos por categoría, intente más tarde...';
 					state.status = FetchStatutes.Failed;
 					state.error = errorMessage;
 

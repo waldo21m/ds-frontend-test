@@ -44,7 +44,11 @@ export const initialState: SidebarState = {
 export const sidebarSlice = createSlice({
 	name: 'sidebar',
 	initialState,
-	reducers: {},
+	reducers: {
+		setContentTypeId: (state, action: PayloadAction<string | undefined>) => {
+			state.contentTypeIdSelected = action.payload;
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(findAllContentTypes.pending, (state) => {
@@ -71,6 +75,8 @@ export const sidebarSlice = createSlice({
 			);
 	},
 });
+
+export const { setContentTypeId } = sidebarSlice.actions;
 
 export const useSidebarSelector = () =>
 	useSelector<AppState, SidebarState>(

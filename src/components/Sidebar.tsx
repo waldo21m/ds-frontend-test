@@ -14,7 +14,11 @@ import {
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import { type SidebarProps } from '../types/sidebarTypes';
-import { findAllContentTypes, useSidebarSelector } from '../slice/sidebarSlice';
+import {
+	findAllContentTypes,
+	setContentTypeId,
+	useSidebarSelector,
+} from '../slice/sidebarSlice';
 import { logoutThunk, useAuthSelector } from '../slice/authSlice';
 import { useAppDispatch } from '../hooks/reduxHooks';
 import DisruptiveStudioLogo from '../assets/disruptive-studio-logo.svg';
@@ -42,15 +46,15 @@ const Sidebar: React.FC<SidebarProps> = ({
 	}, [dispatch]);
 
 	const gotToHome = () => {
+		dispatch(setContentTypeId(undefined));
 		navigate('/');
 		setOpen(false);
 	};
 
-	// TODO: Make this later...
-	// eslint-disable-next-line unicorn/consistent-function-scoping
 	const filterContentsByContentTypeId = (contentTypeId: string) => () => {
-		// eslint-disable-next-line no-console
-		console.log(contentTypeId);
+		dispatch(setContentTypeId(contentTypeId));
+		navigate('/');
+		setOpen(false);
 	};
 
 	return (
