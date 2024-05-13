@@ -53,7 +53,7 @@ Podemos destacar algunas de las librerías y configuraciones:
 - [x] Material UI.
 - [x] Coverage gutters.
 - [x] Axios.
-- [x] Notistack.
+- [x] React toastify.
 
 *Nota: Para mayor información del resto de las dependencias, no dude en consultar el archivo package.json.*
 

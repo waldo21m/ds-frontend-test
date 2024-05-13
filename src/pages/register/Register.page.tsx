@@ -11,27 +11,32 @@ import {
 	Input,
 	InputAdornment,
 	InputLabel,
+	MenuItem,
 	TextField,
 	Typography,
 } from '@mui/material';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { UserTypes } from '../../utils/userTypes.enum';
 import { FetchStatutes } from '../../utils/fetchStatuses.enum';
-import { type LoginFormInputs } from '../../types/authTypes';
-import { loginThunk, useAuthSelector } from '../../slice/authSlice';
+import { type RegisterFormInputs } from '../../types/authTypes';
+import { registerThunk, useAuthSelector } from '../../slice/authSlice';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import DisruptiveStudioLogo from '../../assets/disruptive-studio-logo.svg';
-import './Login.css';
+import './Register.css';
 
 const schema = yup.object().shape({
-	emailOrUsername: yup
+	username: yup.string().required('El nombre de usuario es obligatorio'),
+	email: yup
 		.string()
-		.required('El correo electrónico o el nombre de usuario es obligatorio'),
+		.required('El correo electrónico es obligatorio')
+		.email('El correo electrónico no es válido'),
 	password: yup.string().required('La contraseña es obligatoria'),
+	userType: yup.string().required('El tipo de usuario es obligatorio'),
 });
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const { status } = useAuthSelector();
 	const navigate = useNavigate();
@@ -39,7 +44,7 @@ const LoginPage: React.FC = () => {
 		register,
 		handleSubmit,
 		formState: { errors, isValid },
-	} = useForm<LoginFormInputs>({
+	} = useForm<RegisterFormInputs>({
 		resolver: yupResolver(schema),
 		mode: 'onBlur',
 	});
@@ -53,34 +58,46 @@ const LoginPage: React.FC = () => {
 		event.preventDefault();
 	};
 
-	const onSubmit = (data: LoginFormInputs) => {
-		dispatch(loginThunk(data));
+	const onSubmit = (data: RegisterFormInputs) => {
+		dispatch(registerThunk(data));
 	};
 
 	return (
 		<ProtectedRoute>
 			<Box
-				id='loginPage'
-				data-testid='loginPage'
+				id='registerPage'
+				data-testid='registerPage'
 				component='div'
-				className='loginContainer'
+				className='registerContainer'
 			>
 				<Box component='div' sx={{ mb: 1 }}>
 					<img
 						src={DisruptiveStudioLogo}
 						alt='Disruptive Studio logo'
-						className='loginDisruptiveStudioLogo'
+						className='registerDisruptiveStudioLogo'
 					/>
 				</Box>
 				<Typography variant='h5' sx={{ textAlign: 'center', mb: 2 }}>
 					¡Bienvenido 👋🏽!
 				</Typography>
-				<form className='loginFormContainer' onSubmit={handleSubmit(onSubmit)}>
+				<form
+					className='registerFormContainer'
+					onSubmit={handleSubmit(onSubmit)}
+				>
 					<TextField
-						{...register('emailOrUsername')}
-						error={Boolean(errors.emailOrUsername)}
-						helperText={errors.emailOrUsername?.message}
-						label='Correo electrónico o nombre de usuario'
+						{...register('username')}
+						error={Boolean(errors.username)}
+						helperText={errors.username?.message}
+						label='Nombre de usuario'
+						variant='standard'
+						fullWidth
+						sx={{ mb: 2 }}
+					/>
+					<TextField
+						{...register('email')}
+						error={Boolean(errors.email)}
+						helperText={errors.email?.message}
+						label='Correo electrónico'
 						variant='standard'
 						fullWidth
 						sx={{ mb: 2 }}
@@ -110,9 +127,23 @@ const LoginPage: React.FC = () => {
 							{errors.password?.message}
 						</FormHelperText>
 					</FormControl>
+					<TextField
+						{...register('userType')}
+						error={Boolean(errors.userType)}
+						helperText={errors.userType?.message}
+						label='Tipo de usuario'
+						select
+						variant='standard'
+						fullWidth
+						defaultValue={UserTypes.Reader}
+						sx={{ mb: 2 }}
+					>
+						<MenuItem value={UserTypes.Reader}>{UserTypes.Reader}</MenuItem>
+						<MenuItem value={UserTypes.Creator}>{UserTypes.Creator}</MenuItem>
+					</TextField>
 					<Button
-						id='loginButton'
-						data-testid='loginButton'
+						id='registerButton'
+						data-testid='registerButton'
 						color='primary'
 						variant='contained'
 						type='submit'
@@ -120,18 +151,18 @@ const LoginPage: React.FC = () => {
 						fullWidth
 						sx={{ mb: 1 }}
 					>
-						Iniciar sesión
+						Registrarse
 					</Button>
 					<Button
-						id='registerButton'
-						data-testid='registerButton'
+						id='loginButton'
+						data-testid='loginButton'
 						color='secondary'
 						variant='contained'
 						fullWidth
 						sx={{ mb: 1 }}
-						onClick={() => navigate('/register')}
+						onClick={() => navigate('/login')}
 					>
-						Registrarse
+						Iniciar sesión
 					</Button>
 					<Button
 						id='homeButton'
@@ -149,4 +180,4 @@ const LoginPage: React.FC = () => {
 	);
 };
 
-export default LoginPage;
+export default RegisterPage;

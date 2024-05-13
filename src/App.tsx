@@ -1,14 +1,17 @@
+import { ToastContainer } from 'react-toastify';
 import { RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { useRef } from 'react';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
+import Session from './components/Session';
 import { makeStore, type AppStore } from './App.store';
 import { router } from './App.routes';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App: React.FC = () => {
 	const storeRef = useRef<AppStore>();
@@ -21,7 +24,10 @@ const App: React.FC = () => {
 		<Provider store={storeRef.current}>
 			<ThemeProvider theme={theme}>
 				<StyledEngineProvider injectFirst>
-					<RouterProvider router={router} />
+					<Session>
+						<ToastContainer />
+						<RouterProvider router={router} />
+					</Session>
 				</StyledEngineProvider>
 			</ThemeProvider>
 		</Provider>

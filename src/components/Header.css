@@ -8,22 +8,7 @@
 }
 
 .avatar {
-  color: var(--pink-500);
+  color: var(--indigo-500);
   background-color: #fff;
   font-weight: bold;
-}
-
-@media (width >= 1024px) {
-	.appBarContainer {
-    width: calc(100% - var(--drawer-width));
-    margin-left: var(--drawer-width);
-  }
-
-  .toolbarContainer {
-    justify-content: flex-end;
-  }
-
-  .drawerIcon {
-    display: none;
-  }
 }

@@ -1,4 +1,4 @@
-.loginContainer {
+.registerContainer {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -8,12 +8,12 @@
 	padding: 16px 24px 0;
 }
 
-.loginDisruptiveStudioLogo {
+.registerDisruptiveStudioLogo {
 	width: 265px;
 }
 
 @media (width >= 768px) {
-	.loginFormContainer {
+	.registerFormContainer {
 		width: 400px;
 	}
 }

@@ -1,21 +1,20 @@
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
-import { Toolbar, AppBar, IconButton, Avatar } from '@mui/material';
+import { Toolbar, AppBar, IconButton, Avatar, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { type HeaderProps } from '../types/headerTypes';
+import { useAuthSelector } from '../slice/authSlice';
 import './Header.css';
 
-const Header: React.FC<HeaderProps> = ({
-	isClosing,
-	mobileOpen,
-	setMobileOpen,
-}) => {
+const Header: React.FC<HeaderProps> = ({ isClosing, open, setOpen }) => {
+	const navigate = useNavigate();
+	const { isAuthenticated, userData } = useAuthSelector();
+
 	const handleDrawerToggle = () => {
 		if (!isClosing) {
-			setMobileOpen(!mobileOpen);
+			setOpen(!open);
 		}
 	};
-
-	const emailId = localStorage.getItem('id') ?? 'EM';
 
 	return (
 		<AppBar className='appBarContainer'>
@@ -23,7 +22,6 @@ const Header: React.FC<HeaderProps> = ({
 				<IconButton
 					id='menuDrawerButton'
 					data-testid='menuDrawerButton'
-					className='drawerIcon'
 					color='inherit'
 					aria-label='Open drawer'
 					onClick={handleDrawerToggle}
@@ -31,7 +29,13 @@ const Header: React.FC<HeaderProps> = ({
 					<MenuIcon />
 				</IconButton>
 
-				<Avatar className='avatar'>{`${emailId[0].toUpperCase()}${emailId[1].toUpperCase()}`}</Avatar>
+				{isAuthenticated ? (
+					<Avatar className='avatar'>{`${userData.username[0].toUpperCase()}${userData.username[1].toUpperCase()}`}</Avatar>
+				) : (
+					<Button color='inherit' onClick={() => navigate('/login')}>
+						Login
+					</Button>
+				)}
 			</Toolbar>
 		</AppBar>
 	);

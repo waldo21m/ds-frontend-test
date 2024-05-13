@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import {
 	Toolbar,
@@ -9,37 +10,34 @@ import {
 	ListItemText,
 	Box,
 	Drawer,
-	Typography,
 } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import { FetchStatutes } from '../utils/fetchStatuses.enum';
 import { type SidebarProps } from '../types/sidebarTypes';
-import {
-	filterPosts,
-	showAllPosts,
-	useMainSelector,
-} from '../pages/main/slice/mainSlice';
+import { logoutThunk, useAuthSelector } from '../slice/authSlice';
+import { filterPosts, useMainSelector } from '../pages/main/slice/mainSlice';
 import { useAppDispatch } from '../hooks/reduxHooks';
-import CleverpyLogo from '../assets/cleverpy-logo.jpeg';
+import DisruptiveStudioLogo from '../assets/disruptive-studio-logo.svg';
 import './Sidebar.css';
 
-const handleLogout = () => {
-	localStorage.clear();
-	sessionStorage.clear();
-
-	window.location.href = `${import.meta.env.VITE_HOST_BASE}`;
-};
-
 const Sidebar: React.FC<SidebarProps> = ({
-	mobileOpen,
-	setMobileOpen,
+	open,
+	setOpen,
 	handleDrawerTransitionEnd,
 	handleDrawerClose,
 }) => {
+	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
+	const { isAuthenticated } = useAuthSelector();
 	const { status, originalPosts, userIdSelected } = useMainSelector();
 	const [users, setUsers] = useState<number[]>([]);
+
+	const handleLogout = () => {
+		dispatch(logoutThunk());
+		navigate('/login');
+		setOpen(false);
+	};
 
 	useEffect(() => {
 		if (status === FetchStatutes.Succeeded) {
@@ -52,9 +50,9 @@ const Sidebar: React.FC<SidebarProps> = ({
 		}
 	}, [originalPosts, status]);
 
-	const dispatchShowAllPosts = () => {
-		dispatch(showAllPosts());
-		setMobileOpen(false);
+	const gotToHome = () => {
+		navigate('/');
+		setOpen(false);
 	};
 
 	const filterPostsByUserId = (userId: number) => () => {
@@ -63,64 +61,8 @@ const Sidebar: React.FC<SidebarProps> = ({
 		);
 
 		dispatch(filterPosts({ filteredPosts, userIdSelected: userId }));
-		setMobileOpen(false);
+		setOpen(false);
 	};
-
-	const drawer = (
-		<Box className='drawerContainer' component='div'>
-			<Toolbar className='drawerToolbarContainer'>
-				<img src={CleverpyLogo} alt='Cleverpy logo' className='cleverpyLogo' />
-				<Typography variant='h6' component='div'>
-					Cleverpy test
-				</Typography>
-			</Toolbar>
-			<Divider />
-			<List className='listMenu'>
-				<ListItem disablePadding>
-					<ListItemButton
-						id='homeListItemButton'
-						data-testid='homeListItemButton'
-						selected={userIdSelected === undefined}
-						onClick={dispatchShowAllPosts}
-					>
-						<ListItemIcon className='listItemIcon'>
-							<HomeIcon />
-						</ListItemIcon>
-						<ListItemText primary='Inicio' />
-					</ListItemButton>
-				</ListItem>
-				{users.map((user) => {
-					return (
-						<ListItem key={user} disablePadding>
-							<ListItemButton
-								id={`postListItemButton${user}`}
-								data-testid={`postListItemButton${user}`}
-								selected={userIdSelected === user}
-								onClick={filterPostsByUserId(user)}
-							>
-								<ListItemText primary={`Posts del usuario ${user}`} />
-							</ListItemButton>
-						</ListItem>
-					);
-				})}
-			</List>
-			<Divider />
-			<List>
-				<ListItem disablePadding>
-					<ListItemButton
-						id='logoutListItemButton'
-						data-testid='logoutListItemButton'
-						onClick={handleLogout}
-					>
-						<ListItemIcon className='listItemIcon'>
-							<LogoutIcon />
-						</ListItemIcon>
-						<ListItemText primary='Cerrar sesión' />
-					</ListItemButton>
-				</ListItem>
-			</List>
-		</Box>
-	);
 
 	return (
 		<Box
@@ -131,19 +73,74 @@ const Sidebar: React.FC<SidebarProps> = ({
 			aria-label='Sidebar'
 		>
 			<Drawer
-				className='mobileDrawer'
+				className='drawer'
 				variant='temporary'
-				open={mobileOpen}
+				open={open}
 				onTransitionEnd={handleDrawerTransitionEnd}
 				onClose={handleDrawerClose}
 				ModalProps={{
 					keepMounted: true,
 				}}
 			>
-				{drawer}
-			</Drawer>
-			<Drawer className='desktopDrawer' variant='permanent' open>
-				{drawer}
+				<Box className='drawerContainer' component='div'>
+					<Toolbar className='drawerToolbarContainer'>
+						<img
+							src={DisruptiveStudioLogo}
+							alt='Disruptive Studio logo'
+							className='disruptiveStudioLogo'
+						/>
+					</Toolbar>
+					<Divider />
+					<List className='listMenu'>
+						<ListItem disablePadding>
+							<ListItemButton
+								id='homeListItemButton'
+								data-testid='homeListItemButton'
+								selected={userIdSelected === undefined}
+								onClick={gotToHome}
+							>
+								<ListItemIcon className='listItemIcon'>
+									<HomeIcon />
+								</ListItemIcon>
+								<ListItemText primary='Inicio' />
+							</ListItemButton>
+						</ListItem>
+						{users.map((user) => {
+							return (
+								<ListItem key={user} disablePadding>
+									<ListItemButton
+										id={`postListItemButton${user}`}
+										data-testid={`postListItemButton${user}`}
+										selected={userIdSelected === user}
+										onClick={filterPostsByUserId(user)}
+									>
+										<ListItemText primary={`Posts del usuario ${user}`} />
+									</ListItemButton>
+								</ListItem>
+							);
+						})}
+					</List>
+
+					{isAuthenticated && (
+						<>
+							<Divider />
+							<List>
+								<ListItem disablePadding>
+									<ListItemButton
+										id='logoutListItemButton'
+										data-testid='logoutListItemButton'
+										onClick={handleLogout}
+									>
+										<ListItemIcon className='listItemIcon'>
+											<LogoutIcon />
+										</ListItemIcon>
+										<ListItemText primary='Cerrar sesión' />
+									</ListItemButton>
+								</ListItem>
+							</List>
+						</>
+					)}
+				</Box>
 			</Drawer>
 		</Box>
 	);

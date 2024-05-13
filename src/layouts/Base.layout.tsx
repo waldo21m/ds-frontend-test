@@ -1,18 +1,17 @@
 import { Outlet } from 'react-router-dom';
 import React from 'react';
-import { SnackbarProvider } from 'notistack';
 import { Toolbar, Box, CssBaseline } from '@mui/material';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import './App.css';
+import './Base.css';
 
 const BaseLayout = () => {
-	const [mobileOpen, setMobileOpen] = React.useState(false);
+	const [open, setOpen] = React.useState(false);
 	const [isClosing, setIsClosing] = React.useState(false);
 
 	const handleDrawerClose = () => {
 		setIsClosing(true);
-		setMobileOpen(false);
+		setOpen(false);
 	};
 
 	const handleDrawerTransitionEnd = () => {
@@ -20,34 +19,22 @@ const BaseLayout = () => {
 	};
 
 	return (
-		<SnackbarProvider
-			maxSnack={3}
-			anchorOrigin={{
-				vertical: 'top',
-				horizontal: 'right',
-			}}
-		>
-			<Box component='div' className='rootLayout'>
-				<CssBaseline />
-				<Header
-					isClosing={isClosing}
-					mobileOpen={mobileOpen}
-					setMobileOpen={setMobileOpen}
-				/>
+		<Box component='div' className='rootLayout'>
+			<CssBaseline />
+			<Header isClosing={isClosing} open={open} setOpen={setOpen} />
 
-				<Sidebar
-					mobileOpen={mobileOpen}
-					setMobileOpen={setMobileOpen}
-					handleDrawerTransitionEnd={handleDrawerTransitionEnd}
-					handleDrawerClose={handleDrawerClose}
-				/>
+			<Sidebar
+				open={open}
+				setOpen={setOpen}
+				handleDrawerTransitionEnd={handleDrawerTransitionEnd}
+				handleDrawerClose={handleDrawerClose}
+			/>
 
-				<Box component='main' className='mainContainer'>
-					<Toolbar />
-					<Outlet />
-				</Box>
+			<Box component='main' className='mainContainer'>
+				<Toolbar />
+				<Outlet />
 			</Box>
-		</SnackbarProvider>
+		</Box>
 	);
 };
 

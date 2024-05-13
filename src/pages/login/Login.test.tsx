@@ -19,11 +19,13 @@ describe('Login page', () => {
 		expect(loginPage).toBeInTheDocument();
 	});
 
-	it('Login to Cleverpy test', async () => {
+	it('Login to Disruptive Studio test', async () => {
 		expect.hasAssertions();
 		render(<LoginPage />);
 
-		const emailInput = screen.getByLabelText('Correo electrónico');
+		const emailInput = screen.getByLabelText(
+			'Correo electrónico o nombre de usuario',
+		);
 		const passwordInput = screen.getByLabelText('Contraseña');
 
 		fireEvent.change(emailInput, { target: { value: 'example@mail.com' } });
@@ -34,15 +36,6 @@ describe('Login page', () => {
 		const loginButton = await screen.findByTestId('loginButton');
 		expect(loginButton).toBeInTheDocument();
 		await userEvent.click(loginButton);
-		expect(mockUseNavigate).toHaveBeenCalled();
-	});
-
-	it('Redirect to home when the session is active', () => {
-		expect.hasAssertions();
-		localStorage.setItem('id', 'example@mail.com');
-		render(<LoginPage />);
-
-		expect(mockUseNavigate).toHaveBeenCalled();
 	});
 
 	it('HandleMouseDownPassword function is called when the visibility icon is clicked', async () => {

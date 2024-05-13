@@ -1,20 +1,6 @@
 @import-normalize; /* bring in normalize.css styles */
 
 :root {
-	--pink-50: #fce4ec;
-	--pink-100: #f8bbd0;
-	--pink-200: #f48fb1;
-	--pink-300: #f06292;
-	--pink-400: #ec407a;
-	--pink-500: #e91e63;
-	--pink-600: #d81b60;
-	--pink-700: #c2185b;
-	--pink-800: #ad1457;
-	--pink-900: #880e4f;
-	--pink-a100: #ff80ab;
-	--pink-a200: #ff4081;
-	--pink-a400: #f50057;
-	--pink-a700: #c51162;
 	--indigo-50: #e8eaf6;
 	--indigo-100: #c5cae9;
 	--indigo-200: #9fa8da;
@@ -29,7 +15,21 @@
 	--indigo-a200: #536dfe;
 	--indigo-a400: #3d5afe;
 	--indigo-a700: #304ffe;
-  --drawer-width: 260px;
+	--teal-50: #e0f2f1;
+	--teal-100: #b2dfdb;
+	--teal-200: #80cbc4;
+	--teal-300: #4db6ac;
+	--teal-400: #26a69a;
+	--teal-500: #009688;
+	--teal-600: #00897b;
+	--teal-700: #00796b;
+	--teal-800: #00695c;
+	--teal-900: #004d40;
+	--teal-a100: #a7ffeb;
+	--teal-a200: #64ffda;
+	--teal-a400: #1de9b6;
+	--teal-a700: #00bfa5;
+	--drawer-width: 260px;
 }
 
 body {

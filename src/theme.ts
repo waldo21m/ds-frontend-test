@@ -1,13 +1,13 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
-import { indigo, pink } from '@mui/material/colors';
+import { indigo, teal } from '@mui/material/colors';
 
 let theme = createTheme({
 	palette: {
 		primary: {
-			main: pink[500],
+			main: indigo[500],
 		},
 		secondary: {
-			main: indigo['A200'],
+			main: teal[500],
 		},
 	},
 });

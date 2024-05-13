@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { authSlice } from './slice/authSlice';
 import { mainSlice } from './pages/main/slice/mainSlice';
 
 export const appReducer = combineReducers({
 	[mainSlice.name]: mainSlice.reducer,
+	[authSlice.name]: authSlice.reducer,
 });
 
 export const makeStore = () => {

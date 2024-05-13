@@ -1,9 +1,8 @@
+import { toast } from 'react-toastify';
 import React, { useEffect } from 'react';
-import { useSnackbar } from 'notistack';
-import { Box, Button, IconButton, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CloseIcon from '@mui/icons-material/Close';
 import {
 	fetchPosts,
 	updatePost,
@@ -12,6 +11,7 @@ import {
 } from './slice/mainSlice';
 import EditDialog from './components/EditDialog';
 import DeleteDialog from './components/DeleteDialog';
+import { toastConfig } from '../../utils/toastConfig';
 import { FetchStatutes } from '../../utils/fetchStatuses.enum';
 import { type Post } from '../../types/mainTypes';
 import { useAppDispatch } from '../../hooks/reduxHooks';
@@ -22,22 +22,11 @@ import './Main.css';
 
 const MainPage: React.FC = () => {
 	const dispatch = useAppDispatch();
-	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 	const { originalPosts, posts, userIdSelected, status, error } =
 		useMainSelector();
 	const [selectedPost, setSelectedPost] = React.useState<Post>();
 	const [openEditDialog, setOpenEditDialog] = React.useState(false);
 	const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
-
-	const notistackConfig = {
-		variant: 'success' as const,
-		autoHideDuration: 5000,
-		action: (key: string | number) => (
-			<IconButton color='inherit' onClick={() => closeSnackbar(key)}>
-				<CloseIcon />
-			</IconButton>
-		),
-	};
 
 	const handleClickOpenEditDialog = (post: Post) => () => {
 		setSelectedPost(post);
@@ -79,7 +68,7 @@ const MainPage: React.FC = () => {
 			}),
 		);
 
-		enqueueSnackbar('Modificaste un post con éxito', notistackConfig);
+		toast.success('Modificaste un post con éxito', toastConfig);
 		handleCloseDialog();
 	};
 
@@ -104,10 +93,7 @@ const MainPage: React.FC = () => {
 			}),
 		);
 
-		enqueueSnackbar(
-			`Eliminaste el post ${postDeleted?.title}`,
-			notistackConfig,
-		);
+		toast.success(`Eliminaste el post ${postDeleted?.title}`, toastConfig);
 		handleCloseDialog();
 	};
 

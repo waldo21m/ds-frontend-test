@@ -1,3 +1,5 @@
+import { type StatusTypes } from './statusTypes';
+
 export interface Post {
 	userId: number;
 	id: number;
@@ -9,7 +11,7 @@ export interface MainState {
 	userIdSelected?: number;
 	originalPosts: Post[];
 	posts: Post[];
-	status: 'idle' | 'loading' | 'succeeded' | 'failed';
+	status: StatusTypes;
 	error: string | null;
 }
 
