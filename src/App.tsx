@@ -1,3 +1,4 @@
+import { ToastContainer } from 'react-toastify';
 import { RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { useRef } from 'react';
@@ -9,6 +10,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App: React.FC = () => {
 	const storeRef = useRef<AppStore>();
@@ -21,6 +23,7 @@ const App: React.FC = () => {
 		<Provider store={storeRef.current}>
 			<ThemeProvider theme={theme}>
 				<StyledEngineProvider injectFirst>
+					<ToastContainer />
 					<RouterProvider router={router} />
 				</StyledEngineProvider>
 			</ThemeProvider>

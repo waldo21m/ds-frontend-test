@@ -34,15 +34,6 @@ describe('Login page', () => {
 		const loginButton = await screen.findByTestId('loginButton');
 		expect(loginButton).toBeInTheDocument();
 		await userEvent.click(loginButton);
-		expect(mockUseNavigate).toHaveBeenCalled();
-	});
-
-	it('Redirect to home when the session is active', () => {
-		expect.hasAssertions();
-		localStorage.setItem('id', 'example@mail.com');
-		render(<LoginPage />);
-
-		expect(mockUseNavigate).toHaveBeenCalled();
 	});
 
 	it('HandleMouseDownPassword function is called when the visibility icon is clicked', async () => {

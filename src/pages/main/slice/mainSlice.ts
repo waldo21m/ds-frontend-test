@@ -5,7 +5,7 @@ import {
 	type PayloadAction,
 } from '@reduxjs/toolkit';
 import { FetchStatutes } from '../../../utils/fetchStatuses.enum';
-import AxiosClient from '../../../utils/AxiosClient';
+import axiosClient from '../../../utils/tempClient';
 import {
 	type Post,
 	type MainState,
@@ -15,12 +15,10 @@ import {
 } from '../../../types/mainTypes';
 import { type AppState } from '../../../App.store';
 
-const axiosInstance = AxiosClient.getInstance(
-	'https://jsonplaceholder.typicode.com',
-);
+const axiosApi = axiosClient('https://jsonplaceholder.typicode.com');
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-	const response = await axiosInstance.get<Post[]>('/posts');
+	const response = await axiosApi.get<Post[]>('/posts');
 
 	return response.data;
 });

@@ -16,7 +16,10 @@ import {
 } from '@mui/material';
 import { VisibilityOff, Visibility } from '@mui/icons-material';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { loginThunk, useLoginSelector } from './slice/loginSlice';
+import { FetchStatutes } from '../../utils/fetchStatuses.enum';
 import { type LoginFormInputs } from '../../types/loginTypes';
+import { useAppDispatch } from '../../hooks/reduxHooks';
 import DisruptiveStudioLogo from '../../assets/disruptive-studio-logo.svg';
 import './Login.css';
 
@@ -28,6 +31,8 @@ const schema = yup.object().shape({
 });
 
 const LoginPage: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const { status } = useLoginSelector();
 	const navigate = useNavigate();
 	const {
 		register,
@@ -48,8 +53,7 @@ const LoginPage: React.FC = () => {
 	};
 
 	const onSubmit = (data: LoginFormInputs) => {
-		localStorage.setItem('id', data.emailOrUsername);
-		navigate('/');
+		dispatch(loginThunk(data));
 	};
 
 	return (
@@ -110,7 +114,7 @@ const LoginPage: React.FC = () => {
 					color='primary'
 					variant='contained'
 					type='submit'
-					disabled={!isValid}
+					disabled={!isValid || status === FetchStatutes.Loading}
 					fullWidth
 					sx={{ mb: 1 }}
 				>

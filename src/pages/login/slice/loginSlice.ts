@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { isAxiosError } from 'axios';
 import {
@@ -5,8 +6,9 @@ import {
 	createSlice,
 	type PayloadAction,
 } from '@reduxjs/toolkit';
+import { toastConfig } from '../../../utils/toastConfig';
+import axiosClient from '../../../utils/tempClient';
 import { FetchStatutes } from '../../../utils/fetchStatuses.enum';
-import AxiosClient from '../../../utils/AxiosClient';
 import {
 	type LoginState,
 	type LoginFormInputs,
@@ -14,7 +16,7 @@ import {
 } from '../../../types/loginTypes';
 import { type AppState } from '../../../App.store';
 
-const axiosInstance = AxiosClient.getInstance(import.meta.env.VITE_DS_API_URL);
+const axiosApi = axiosClient(import.meta.env.VITE_DS_API_URL);
 
 export const loginThunk = createAsyncThunk<
 	LoginResponse,
@@ -22,7 +24,7 @@ export const loginThunk = createAsyncThunk<
 	{ rejectValue: string }
 >('login', async (body: LoginFormInputs, thunkAPI) => {
 	try {
-		const response = await axiosInstance.post<LoginResponse>(
+		const response = await axiosApi.post<LoginResponse>(
 			'/api/v1/users/sign-in',
 			body,
 		);
@@ -63,8 +65,10 @@ export const loginSlice = createSlice({
 			.addCase(
 				loginThunk.rejected,
 				(state, action: PayloadAction<string | undefined>) => {
-					state.status = FetchStatutes.Failed;
-					state.error = action.payload ?? 'Ocurrió un error inesperado';
+					state.status = FetchStatutes.Idle;
+
+					const errorMessage = action.payload ?? 'Ocurrió un error inesperado';
+					toast.error(errorMessage, toastConfig);
 				},
 			);
 	},
