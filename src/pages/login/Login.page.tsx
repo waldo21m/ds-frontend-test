@@ -53,7 +53,12 @@ const LoginPage: React.FC = () => {
 	};
 
 	return (
-		<Box component='div' className='loginContainer'>
+		<Box
+			id='loginPage'
+			data-testid='loginPage'
+			component='div'
+			className='loginContainer'
+		>
 			<Box component='div' sx={{ mb: 1 }}>
 				<img
 					src={DisruptiveStudioLogo}

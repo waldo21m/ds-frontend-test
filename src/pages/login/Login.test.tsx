@@ -19,7 +19,7 @@ describe('Login page', () => {
 		expect(loginPage).toBeInTheDocument();
 	});
 
-	it('Login to Cleverpy test', async () => {
+	it('Login to Disruptive Studio test', async () => {
 		expect.hasAssertions();
 		render(<LoginPage />);
 

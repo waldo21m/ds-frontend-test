@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { mainSlice } from './pages/main/slice/mainSlice';
+import { loginSlice } from './pages/login/slice/loginSlice';
 
 export const appReducer = combineReducers({
 	[mainSlice.name]: mainSlice.reducer,
+	[loginSlice.name]: loginSlice.reducer,
 });
 
 export const makeStore = () => {

@@ -5,6 +5,7 @@ import { render, screen, fireEvent } from '../utils/test-utils';
 import { FetchStatutes } from '../utils/fetchStatuses.enum';
 import { originalPosts, posts } from '../mock/post.mock';
 
+const mockUseNavigate = vi.fn();
 const mockResponse = vi.fn();
 Object.defineProperty(window, 'location', {
 	value: {
@@ -31,6 +32,11 @@ describe('Sidebar', () => {
 			useAppDispatch: () => mockUseAppDispatch,
 		}));
 
+		vi.mock('react-router-dom', () => ({
+			...vi.importActual('react-router-dom'),
+			useNavigate: () => mockUseNavigate,
+		}));
+
 		vi.mock('../pages/main/slice/mainSlice', async (importOriginal) => {
 			const mod =
 				await importOriginal<typeof import('../pages/main/slice/mainSlice')>();
@@ -44,13 +50,13 @@ describe('Sidebar', () => {
 
 	it('Filter posts by user id', async () => {
 		expect.hasAssertions();
-		const setMobileOpen = vi.fn();
+		const setOpen = vi.fn();
 		const handleDrawerTransitionEnd = vi.fn();
 		const handleDrawerClose = vi.fn();
 		render(
 			<Sidebar
-				mobileOpen={false}
-				setMobileOpen={setMobileOpen}
+				open={false}
+				setOpen={setOpen}
 				handleDrawerTransitionEnd={handleDrawerTransitionEnd}
 				handleDrawerClose={handleDrawerClose}
 			/>,
@@ -71,13 +77,13 @@ describe('Sidebar', () => {
 
 	it('Restore posts', async () => {
 		expect.hasAssertions();
-		const setMobileOpen = vi.fn();
+		const setOpen = vi.fn();
 		const handleDrawerTransitionEnd = vi.fn();
 		const handleDrawerClose = vi.fn();
 		render(
 			<Sidebar
-				mobileOpen={false}
-				setMobileOpen={setMobileOpen}
+				open={false}
+				setOpen={setOpen}
 				handleDrawerTransitionEnd={handleDrawerTransitionEnd}
 				handleDrawerClose={handleDrawerClose}
 			/>,
@@ -97,13 +103,13 @@ describe('Sidebar', () => {
 
 	it('Logout', async () => {
 		expect.hasAssertions();
-		const setMobileOpen = vi.fn();
+		const setOpen = vi.fn();
 		const handleDrawerTransitionEnd = vi.fn();
 		const handleDrawerClose = vi.fn();
 		render(
 			<Sidebar
-				mobileOpen={false}
-				setMobileOpen={setMobileOpen}
+				open={false}
+				setOpen={setOpen}
 				handleDrawerTransitionEnd={handleDrawerTransitionEnd}
 				handleDrawerClose={handleDrawerClose}
 			/>,

@@ -20,7 +20,7 @@ describe('App', () => {
 		expect.hasAssertions();
 		render(<App />);
 
-		const loginPage = await screen.findByTestId('loginPage');
+		const loginPage = await screen.findByTestId('mainPage');
 		expect(loginPage).toBeInTheDocument();
 	});
 });
